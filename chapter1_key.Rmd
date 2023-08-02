@@ -1,0 +1,107 @@
+---
+title: "Chapter 1 Exercises"
+author: "Answer Key"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: [wrangling_exercises.bib]
+csl: chicago-note-bibliography.csl
+---
+
+These exercises focus on how to produce a PDF output and the basic skills of programming in R. For each of these problems, display both the code and output. Make sure to use comments to show what part of the question your code refers to and to annotate what you are trying to do. 
+
+**1.  Create a vector of 10 numbers called `nums`**
+
+```{r}
+# 1.
+nums <- c(1,2,3,4,5,6,7,8,9,10)
+```
+
+  a. find the mean
+  
+```{r}
+# a
+mean(nums)
+```
+  
+  b. find the median 
+  
+```{r}
+# b
+median(nums)
+```
+  
+  c. find the square of all the numbers
+  
+```{r}
+# c 
+nums^2
+```
+  
+  d. find the natural log of all the numbers
+
+```{r}
+# d
+log(nums)
+```
+
+**2. Write an if/else statement that changes the variable `x` to `NA` if it equals `'-'`. Otherwise, if `x` does not equal `'-'`, multiply it by 100.**
+
+```{r}
+x <- '-' # change how the variable is defined to test your loop
+
+if (x == '-'){ # if x is - 
+  x <- NA # resave x as NA
+} else{ # if x is not -
+  x <- x * 100 # multiply it by 100
+}
+x # print x
+```
+
+**3. Use the vector `nums` from problem 1 and save an empty vector called `new`. Write a for loop that iterates through every element in `nums`, adds 10 to it and adds it to `new` using the `append()` function.** 
+
+```{r}
+new <- c() # initialize new empty vector
+for (y in nums){ # for each element in nums: y
+  new <- append(new, y + 10) # append y + 10 to the new vector
+}
+new # display the new vector
+```
+
+**4. Create a variable `k` set equal to 100. Write a while loop that subtracts 1 from `k` and then prints `k` until it equals 0.**
+
+```{r}
+k <- 100 # save k = 100
+
+while(k != 0){ # this loop runs until k = 0, then stops
+  # could also use k > 0 
+  k <- k - 1 # must save to preserve result
+  print(k)
+}
+```
+
+**5. Create a new vector called `both` containing both strings and numbers. Write a function that takes a vector as the only parameter and separates the elements of that vector into two new vectors, one containing only strings, one containing only numbers. Print both new vectors and then return nothing. Test your new function using `both`.**
+
+Hint: When creating the vector `both`, all of its elements will be classified as strings because it contains some strings and all elements can be expressed as strings. To determine if an element can be expressed as a numeric or not, use the `as.numeric()` function. If it can be expressed as a numeric, the number will be returned. If it cannot be, then it will return `NA`. 
+
+```{r}
+both <- c('string', 50, 'both', 100, 'letters', 34, 23, 'one') # create vector containing both strings and nums
+
+sep <- function(vec){ # define the function
+  chars <- c() # create empty character vector
+  nums <- c() # create empty numbers vector
+  for (i in vec){ # for each element in the vec parameter
+    if (is.na(as.numeric(i)) != TRUE){ # if it is a number
+      nums <- append(nums, as.numeric(i)) # add it to the numeric vector
+    } 
+    else { # otherwise, if it is not numeric
+      chars <- append(chars, i) # add it to the character vector
+    }
+  }
+  print(chars) # print the character vector
+  print(nums) # print the numeric vector
+  return() # return nothing
+}
+
+sep(both) # call function on sample vector containing both
+```
+

@@ -1,0 +1,247 @@
+---
+title: "Chapter 3 Exercises"
+author: "Answer Key"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: [wrangling_exercises.bib]
+link-citations: TRUE
+csl: chicago-note-bibliography.csl
+---
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+**1. Load in the saved and cleaned versions of Appendix B.7, B.25, and B.26 tables from the Chapter 2 Exercises.[@forecasting]**
+
+a. describe the data from Table B.7
+
+Table B.7 contains a time series of the Whole Foods closing market stock price. The only two variables are time and the stock price. Observations occur on a daily basis from January 2nd 2001 until December 31st 2001. There are no missing observations. These data are collected from the [Yahoo finance website](http://finance.yahoo.com/q/hp?s=WFM+Historical+Prices).
+ 
+b. describe the data from Table B.25
+  
+Table B.25 contains yearly observations of traffic fatalities, resident population (thousands), licensed drivers (thousands), registered motor vehicles (thousands), vehicle miles traveled (billions), and unemployment rate (%) for the United States. These observations occur from 1966 to 2012 and there are no missing observations. These data are collected from the [National Highway Traffic Safety Administration](http://www-fars.nhtsa.dot.gov/Main/index.aspx) and the [U.S. Bureau of Labor Statistics](http://www.bls.gov/data/)
+  
+c. describe the data from Table B.26
+
+Table B.26 contains monthly observations of new home sales and building permits (in thousands) in the United States. These observations span from January of 1963 to May of 2014. There are no missing observations within that span. These data are collected from the [U.S. census bureau](http://www.census.gov/housing/hvs/). 
+
+```{r include=FALSE}
+b.7 <- read_rds("b_7.RDS")
+b.25 <- read_rds("b_25.RDS")
+b.26 <- read_rds("b_26.RDS")
+```
+
+**2. For each of the data sets listed below, appropriately visualize each variable over time. Describe each one. **
+
+a. Table B.7
+
+The Whole Foods daily closing stock price appears to be increasing consistently from April to December 2001.  
+
+```{r echo=FALSE}
+b.7 |>
+  ggplot(mapping = aes(x = time, y = dollars)) + 
+    geom_point() + 
+    geom_line()
+```
+
+b. Table B.25
+
+Yearly observations of traffic fatalities appears to be decreasing over time. Additionally, there appears to be a wave like pattern in the data. 
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = year, y = fatalities)) + 
+  geom_point() + 
+  geom_line()
+```
+
+Yearly observations of resident population appear to be consistently increasing over time. It appears to possibly follow a upward linear trend, but this must be confirmed through empirical methods. 
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = year, y = pop)) + 
+  geom_point() + 
+  geom_line()
+```
+
+The number of licensed drivers appears to be increasing over time. It closely resembles the plot of population, an observation that makes theoretical sense when considering the two metrics. There appears to be a slightly less strong upward trend over time that must be confirmed through empirical methods. 
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = year, y = drivers)) + 
+  geom_point() + 
+  geom_line()
+```
+
+The number of registered vehicles appears to be increasing over time. The observed upward trend must be confirmed through empirical methods. 
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = year, y = vehicles)) + 
+  geom_point() + 
+  geom_line()
+```
+
+The number of miles driven appears to consistently increase over time and then plateau in the last 6 years. The observed upward trend must be confirmed through empirical observations. 
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = year, y = miles_driven)) + 
+  geom_point() + 
+  geom_line()
+```
+
+The unemployment rate does not appear to have a consistent trend that can be observed in the plot. It has a relatively small range and different shape compared to the other variables in the data set. 
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = year, y = unemp_rate)) + 
+  geom_point() + 
+  geom_line()
+```
+
+c. Table B.26
+
+New home sales appears to have a general upward trend until 2008 despite consistent observed fluctuations. This upwards trend must be confirmed through empirical methods. After 2008 there is a steep crash in the number of new homes sold. This coincides with the 2008 financial crisis and makes theoretical sense as an explanation for the apparent shock. 
+
+```{r echo=FALSE}
+b.26 |>
+  ggplot(aes(x = time, y = sales)) + 
+  geom_point() +
+  geom_line()
+```
+
+The number of new home permits appears to have a similar shape to the new homes sales data. There appears to be slightly more variance in the permit data than the new home sales. These data appear to experience a large shock in 2008, coinciding with the financial crisis at the time.  
+
+```{r echo=FALSE}
+b.26 |>
+  ggplot(aes(x = time, y = permits)) + 
+  geom_point() +
+  geom_line()
+```
+
+**3. Use the following aesthetics to visualize both the new home sales and permit variables from Appendix B.26 on the same visualization. Be sure to make sure the visualization is legible. Which method do you think is best for visualizing these data?**
+
+I think both the visualizations that use color and shading are equally well suited to showing the relationship between these two variables on the same plot. They both show a clear distinction between lower and higher numbers of permits in the progression of the plotting of the sales data. The visualization using size has issues with legibility, as increasing the size of the points leads to some over-plotting. 
+
+a. color
+
+```{r echo=FALSE}
+b.26 |>
+  ggplot(aes(x = time, y = sales, color = permits)) + 
+  geom_point() + 
+  geom_line()
+```
+
+b. size
+
+```{r echo=FALSE}
+b.26 |>
+  ggplot(aes(x = time, y = sales)) + 
+  geom_point(aes(size = permits)) + 
+  geom_line()
+```
+
+c. alpha
+
+```{r echo=FALSE}
+b.26 |>
+  ggplot(aes(x = time, y = sales, alpha = permits)) + 
+  geom_point() + 
+  geom_line()
+```
+
+
+**4. Visualize the distributions of all the variables in Table B.25 using the following methods. Compare the distributions of the different variables and discuss which visualization you think is best.**
+
+The key issue with these data is that there are not many observations. This leads to distributions that can be hard to interpret. For that reason, I think that `geom_density()` does the best job visualizing the distributions of these variables. This takes the focus off setting the proper number or width of bins and visualizes the distribution in a continuous fashion.
+
+Fatalities appears to have a relatively constant mean and to be the closest to the normal distribution out of any of the variables, though not close in any statistical sense. Population, drivers, and vehicles all appear to be closer to a uniform distribution, though there are not enough observations to make a meaningful judgement on this. Unemployment rate appears to have a relatively constant mean but also to have a heavy right tail, though again the number of observations limit this. 
+
+a. histogram
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = fatalities)) + 
+  geom_histogram(binwidth = 500)
+
+b.25 |>
+  ggplot(aes(x = pop)) + 
+  geom_histogram(binwidth = 5000)
+
+b.25 |>
+  ggplot(aes(x = drivers)) + 
+  geom_histogram(binwidth = 2500)
+
+b.25 |>
+  ggplot(aes(x = vehicles)) + 
+  geom_histogram(binwidth = 5000)
+
+b.25 |>
+  ggplot(aes(x = miles_driven)) + 
+  geom_histogram(binwidth = 100)
+
+b.25 |>
+  ggplot(aes(x = unemp_rate)) + 
+  geom_histogram(binwidth = .25)
+```
+
+b. freqpoly
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = fatalities)) + 
+  geom_freqpoly(binwidth = 500)
+
+b.25 |>
+  ggplot(aes(x = pop)) + 
+  geom_freqpoly(binwidth = 5000)
+
+b.25 |>
+  ggplot(aes(x = drivers)) + 
+  geom_freqpoly(binwidth = 2000)
+
+b.25 |>
+  ggplot(aes(x = vehicles)) + 
+  geom_freqpoly(binwidth = 5000)
+
+b.25 |>
+  ggplot(aes(x = miles_driven)) + 
+  geom_freqpoly(binwidth = 100)
+
+b.25 |>
+  ggplot(aes(x = unemp_rate)) + 
+  geom_freqpoly(binwidth = .25)
+```
+
+c. density
+
+```{r echo=FALSE}
+b.25 |>
+  ggplot(aes(x = fatalities)) + 
+  geom_density()
+
+b.25 |>
+  ggplot(aes(x = pop)) + 
+  geom_density()
+
+b.25 |>
+  ggplot(aes(x = drivers)) + 
+  geom_density()
+
+b.25 |>
+  ggplot(aes(x = vehicles)) + 
+  geom_density()
+
+b.25 |>
+  ggplot(aes(x = miles_driven)) + 
+  geom_density()
+
+b.25 |>
+  ggplot(aes(x = unemp_rate)) + 
+  geom_density()
+```
+
+
+# References

@@ -1,0 +1,65 @@
+---
+title: "Chapter 2 Exercises"
+author: "Your Name Here"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    includes:
+      in_header: header.tex
+bibliography: [wrangling_exercises.bib]
+csl: chicago-note-bibliography.csl
+---
+
+For these problems, display both the code and the output. All data frames should be displayed using the `gt` package with appropriate labels. Be sure to use comments to properly annotate your code.
+
+In this code chunk load all packages necessary for all problems:
+
+```{r include=FALSE}
+
+```
+
+**1. Import all necessary data for subsequent problems and save them as data frames. All data comes from the master data excel file from *Introduction to Time Series Analysis and Forecasting* by Douglas C. Montgomery, Cheryl L. Jennings, and Murat Kulachi.[@forecasting] Make sure to appropriately rename variables for coding.**
+
+a.  Table B.25: US Motor Vehicle Traffic Fatalities
+b.  Table B.7: Whole Foods Market Stock Price
+c.  Table B.26: Single Family Residential New Home Sales and Building Permits (in Thousands of Units)
+  + note: each column after year corresponds to the sales or permits from a certain month, make sure when renaming columns that the name denotes which month each column refers to.
+
+
+**2.  Use data from Appendix B.25, US motor vehicle traffic fatalities.**
+
+a.  create a new variable containing the number of fatalities per capita.
+b.  create a new variable containing the average number of miles traveled per registered vehicle
+c.  create a new variable containing the average number of miles traveled per licensed driver
+d.  create a new variable that is the natural log of miles driven
+e.  create a new variable that denotes a low (x < 4%), medium (4% =< x < 6%), or high (x >= 6%) unemployment rate
+  + hint: use the `case_when()` function
+
+
+**3. Use data from Appendix B.25.**
+
+a.  Create a summary table with the mean of all the original variables except for year.
+b.  Create a summary table with the median of all the original variables except for year.
+c.  arrange B.25 in descending order of population
+d.  arrange B.25 in ascending order of fatalities
+
+
+**4.  This data frame is not clean because there are multiple date and dollars columns. Clean this data frame so it only has two columns and each row corresponds to one observation.**
+
+Hint: It is much easier to rearrange the data in excel and then re-import it already clean.
+
+a.  create a summary table showing the average dollars from each month (make sure the time variable is correctly specified)
+b.  create a summary table showing the average dollars from each week day
+c. filter the data to only show observations from January
+
+
+**5. Appendix B.26 contains multiple issues preventing it from being considered clean data. All columns contain numeric values but do not all have the numeric type. There are missing values represented as '-' instead of `NA`. Each observation does not have its own row. The time is not indicated through one variable and is not a `date_time` type. Use `dplyr` functions to clean this data and drop all missing observations.**
+
+
+**6. Merge the new home sales and permits data from Appendix B.7 with the Whole Foods daily closing price data from Appendix B.26. First, make a version of the Whole Foods data that contains the monthly average for each month. Then merge the data sets, keeping only observations that have data for new home sales, permits and the monthly average stock price. **
+
+
+**7. Save all three fully clean versions of the data sets used in these exercises into .RDS files for use in the exercises for the next chapter.**
+
+
+# References

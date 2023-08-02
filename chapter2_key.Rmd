@@ -1,0 +1,234 @@
+---
+title: "Chapter 2 Exercises"
+author: "Answer Key"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    includes:
+      in_header: header.tex
+bibliography: [wrangling_exercises.bib]
+csl: chicago-note-bibliography.csl
+---
+
+For these problems, display both the code and the output. All data frames should be displayed using the `gt` package with appropriate labels. Be sure to use comments to properly annotate your code.
+
+In this code chunk load all packages necessary for all problems:
+
+```{r include=FALSE}
+library(readxl)
+library(tidyverse)
+library(gt)
+```
+
+**1. Import all necessary data for subsequent problems and save them as data frames. All data comes from the master data excel file from *Introduction to Time Series Analysis and Forecasting* by Douglas C. Montgomery, Cheryl L. Jennings, and Murat Kulachi.[@forecasting] Make sure to appropriately rename variables for coding.**
+
+a.  Table B.25: US Motor Vehicle Traffic Fatalities
+b.  Table B.7: Whole Foods Market Stock Price
+c.  Table B.26: Single Family Residential New Home Sales and Building Permits (in Thousands of Units)
+  + note: each column after year corresponds to the sales or permits from a certain month, make sure when renaming columns that the name denotes which month each column refers to.
+
+```{r}
+# a
+b.25 <- read_excel('MasterData.xls', sheet = "B.25-FATALITIES", skip = 2) |>
+  rename(year = Year, 
+         fatalities = Fatalities, 
+         pop = `Resident Population (Thousands)`, 
+         drivers = `Licensed Drivers (Thousands)`, 
+         vehicles = `Registered Motor Vehicles (Thousands)`, 
+         miles_driven = `Vehicle Miles Traveled (Billions)`, 
+         unemp_rate = `Annual Unemployment Rate (%)` ) 
+# changed all names for easier referencing within code
+
+gt(b.25) |> 
+  tab_header(title = "Yearly US Motor Vehicle Traffic Fatalities from 1966 to 2012") |>
+  tab_source_note("Source: http://www-fars.nhtsa.dot.gov/Main/index.aspx, http://www.bls.gov/data/") 
+```
+
+\blandscape
+
+To use this command to turn the page to landscape include the following in your header: 
+
+```
+includes:
+      in_header: header.tex
+```
+
+```{r}
+# b. 
+b.7 <- read_excel('MasterData.xls', sheet = "B.7-WFMI", skip = 3)
+
+gt(b.7) |> tab_header(title = "Daily Closing Whole Foods Market Stock Price",
+                      subtitle = "From Jan 2nd to Mar 14th 2001") |> 
+  tab_source_note("Source:  http://finance.yahoo.com/q/hp?s=WFM+Historical+Prices") |>
+  fmt_date(columns = c(Date...1, Date...3, Date...5, Date...7, Date...9),
+           date_style = "iso")
+```
+
+
+
+```{r}
+# c
+b.26 <- read_excel('MasterData.xls', sheet = "B.26-PERMITS", skip = 4) |>
+  rename(year = Year, 
+         jan_sales = Sales...2, jan_permits = Permits...3, 
+         feb_sales = Sales...4, feb_permits = Permits...5, 
+         mar_sales = Sales...6, mar_permits = Permits...7, 
+         apr_sales = Sales...8, apr_permits = Permits...9, 
+         may_sales = Sales...10, may_permits = Permits...11, 
+         jun_sales = Sales...12, jun_permits = Permits...13, 
+         jul_sales = Sales...14, jul_permits = Permits...15, 
+         aug_sales = Sales...16, aug_permits = Permits...17, 
+         sep_sales = Sales...18, sep_permits = Permits...19, 
+         oct_sales = Sales...20, oct_permits = Permits...21, 
+         nov_sales = Sales...22, nov_permits = Permits...23, 
+         dec_sales = Sales...24, dec_permits = Permits...25)
+
+b.26 |>
+  select(year, jan_sales, jan_permits, feb_sales, feb_permits, mar_sales, mar_permits, apr_sales, apr_permits, may_sales, may_permits, jun_sales, jun_permits ) |>
+  gt() |> 
+  tab_header(title = "Monthly Single Family Residential New Home Sales and Building Permits from Jan 1963 to May 2014", subtitle = "(in thousands of units)") |>
+  tab_source_note("Source:  http://www.census.gov/housing/hvs/") 
+# table with the first half of the data
+
+b.26 |>
+  select(year, jul_sales, jul_permits, aug_sales, aug_permits, sep_sales, sep_permits, oct_sales, oct_permits, nov_sales, nov_permits, dec_sales, dec_permits) |>
+  gt() |> 
+  tab_header(title = "Monthly Single Family Residential New Home Sales and Building Permits from Jan 1963 to May 2014", subtitle = "(in thousands of units)") |>
+  tab_source_note("Source:  http://www.census.gov/housing/hvs/") 
+# table with the second half of the data
+```
+
+\elandscape
+
+**2.  Use data from Appendix B.25, US motor vehicle traffic fatalities.**
+
+a.  create a new variable containing the number of fatalities per capita.
+b.  create a new variable containing the average number of miles traveled per registered vehicle
+c.  create a new variable containing the average number of miles traveled per licensed driver
+d.  create a new variable that is the natural log of miles driven
+e.  create a new variable that denotes a low (x < 4%), medium (4% =< x < 6%), or high (x >= 6%) unemployment rate
+  + hint: use the `case_when()` function
+
+\blandscape
+
+```{r}
+b.25 |>
+  mutate(fatal_per_cap = fatalities / pop, # a.
+         miles_per_car = miles_driven / vehicles, # b.
+         miles_per_driver = miles_driven / drivers, # c.
+         ln_miles_driven = log(miles_driven), # d.
+         unemp_lvl = case_when(unemp_rate < 4 ~ "low",
+                               unemp_rate >= 4 & unemp_rate < 6 ~ "medium",
+                               unemp_rate >= 6 ~ "high")) |> # e.  
+  gt()
+```
+
+\elandscape
+
+**3. Use data from Appendix B.25.**
+
+a.  Create a summary table with the mean of all the original variables except for year.
+b.  Create a summary table with the median of all the original variables except for year.
+c.  arrange B.25 in descending order of population
+d.  arrange B.25 in ascending order of fatalities
+
+```{r}
+# a
+b.25 |>
+  summarize(mean(fatalities), mean(pop), mean(drivers), 
+            mean(vehicles), mean(miles_driven), mean(unemp_rate)) |>
+  gt()
+
+# b 
+b.25 |>
+  summarize(median(fatalities), median(pop), median(drivers),
+            median(vehicles), median(miles_driven), median(unemp_rate)) |>
+  gt()
+
+# c
+b.25 |>
+  arrange(desc(pop)) |>
+  gt()
+
+#d
+b.25 |>
+  arrange(fatalities) |>
+  gt()
+```
+
+**4.  This data frame is not clean because there are multiple date and dollars columns. Clean this data frame so it only has two columns and each row corresponds to one observation.**
+
+Hint: It is much easier to rearrange the data in excel and then re-import it already clean.
+
+a.  create a summary table showing the average dollars from each month (make sure the time variable is correctly specified)
+b.  create a summary table showing the average dollars from each week day
+c. filter the data to only show observations from January
+
+```{r}
+# 4. 
+b.7_clean <- read_excel("b.7_clean.xlsx", skip = 3) |> 
+  rename(time = Date, dollars = Dollars) |> 
+  mutate(time = parse_date_time(time, "%ymd"))
+
+gt(b.7_clean) |>
+  fmt_date(columns = time,
+           date_style = "iso")
+
+# a. 
+b.7_clean |> group_by(month(time)) |>
+  summarize(mean(dollars)) |> gt()
+
+# b.
+b.7_clean |>
+  group_by(wday(time, label = TRUE)) |>
+  summarize(mean(dollars)) |> gt()
+
+# c.
+b.7_clean |>
+  filter(month(time) == 1) |> gt() |>
+  fmt_date(columns = time,
+           date_style = "iso")
+```
+
+**5. Appendix B.26 contains multiple issues preventing it from being considered clean data. All columns contain numeric values but do not all have the numeric type. There are missing values represented as '-' instead of `NA`. Each observation does not have its own row. The time is not indicated through one variable and is not a `date_time` type. Use `dplyr` functions to clean this data and drop all missing observations.**
+
+```{r}
+b.26_clean <- b.26 |>
+  mutate_all(as.numeric) |> # makes all chr cols to dbl
+  pivot_longer(-(year), names_to = "var") |> # puts all values in a single col
+  mutate(month = str_sub(var, 1, 3), var = str_sub(var, start = 5)) |> # splits month from value indicator
+  pivot_wider(names_from = var, values_from = value) |> # create a sales and permits column
+  mutate(time = parse_date_time(str_c(year, " ", month), "%ym")) |> # create date time object to represent time
+  select(time, sales, permits) |>
+  drop_na()
+
+b.26_clean |> # select only relevant cols
+  gt() |>
+  fmt_date(columns = time,
+           date_style = "iso")
+```
+
+**6. Merge the new home sales and permits data from Appendix B.7 with the Whole Foods daily closing price data from Appendix B.26. First, make a version of the Whole Foods data that contains the monthly average for each month. Then merge the data sets, keeping only observations that have data for new home sales, permits and the monthly average stock price. **
+
+```{r}
+b.7_clean |>
+  group_by(month(time)) |>
+  summarize(mean(dollars)) |>
+  mutate(time = make_datetime(year = 2001, month = `month(time)`)) |>
+  inner_join(b.26_clean, by = "time") |>
+  select(time, `mean(dollars)`, sales, permits) |>
+  gt() |>
+  fmt_date(columns = time,
+           date_style = "iso")
+```
+
+**7. Save all three fully clean versions of the data sets used in these exercises into .RDS files for use in the exercises for the next chapter.**
+
+```{r}
+saveRDS(b.25, file = "b_25.RDS")
+saveRDS(b.7_clean, file = "b_7.RDS")
+saveRDS(b.26_clean, file = "b_26.RDS")
+```
+
+
+# References

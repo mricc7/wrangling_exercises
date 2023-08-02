@@ -1,0 +1,79 @@
+---
+title: "Chapter 3 Exercises"
+author: "Your Name Here"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: [wrangling_exercises.bib]
+link-citations: TRUE
+csl: chicago-note-bibliography.csl
+---
+
+In this code chunk load all necessary packages (then delete this line of text):
+
+```{r include=FALSE}
+
+```
+
+For these problems, show only the relevant output from the code and hide the code itself. Include what you deem necessary to answer the questions and present it in a professional and visually appealing PDF. Make sure to properly cite data sources and material used when answering questions. These are the usual standards for submitted assignments. 
+
+**1. Load in the saved and cleaned versions of Appendix B.7, B.25, and B.26 tables from the Chapter 2 Exercises.[@forecasting]**
+
+a. describe the data from Table B.7
+
+
+ 
+b. describe the data from Table B.25
+  
+
+  
+c. describe the data from Table B.26
+
+
+
+**2. For each of the data sets listed below, appropriately visualize each variable over time. Describe each one. **
+
+a. Table B.7
+
+
+
+b. Table B.25
+
+
+c. Table B.26
+
+
+
+**3. Use the following aesthetics to visualize both the new home sales and permit variables from Appendix B.26 on the same visualization. Be sure to make sure the visualization is legible. Which method do you think is best for visualizing these data?**
+
+
+
+a. color
+
+
+
+b. size
+
+
+
+c. alpha
+
+
+
+**4. Visualize the distributions of all the variables in Table B.25 using the following methods. Compare the distributions of the different variables and discuss which visualization you think is best.**
+
+
+
+a. histogram
+
+
+
+b. freqpoly
+
+
+
+c. density
+
+
+
+
+# References

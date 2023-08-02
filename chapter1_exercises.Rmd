@@ -1,0 +1,32 @@
+---
+title: "Chapter 1 Exercises"
+author: "Your Name Here"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: [wrangling_exercises.bib]
+csl: chicago-note-bibliography.csl
+---
+
+These exercises focus on how to produce a PDF output and the basic skills of programming in R. For each of these problems, display both the code and output. Make sure to use comments to show what part of the question your code refers to and to annotate what you are trying to do. 
+
+**1.  Create a vector of 10 numbers called `nums`**
+
+  a. find the mean
+  b. find the median 
+  c. find the square of all the numbers
+  d. find the natural log of all the numbers
+
+
+**2. Write an if/else statement that changes the variable `x` to `NA` if it equals `'-'`. Otherwise, if `x` does not equal `'-'`, multiply it by 100.**
+
+
+**3. Use the vector `nums` from problem 1 and write an empty vector called `new`. Write a for loop that iterates through every element in `nums`, adds 10 to it and adds it to `new` using the `append()` function.** 
+
+
+**4. Create a variable `k` set equal to 100. Write a while loop that subtracts 1 from `k` and then prints `k` until it equals 0.**
+
+
+**5. Create a new vector called `both` containing both strings and numbers. Write a function that takes a vector as the only parameter and separates the elements of that vector into two new vectors, one containing only strings, one containing only numbers. Print both new vectors and then return nothing. Test your new function using `both`.**
+
+Hint: When creating the vector `both`, all of its elements will be classified as strings because it contains some strings and all elements can be expressed as strings. To determine if an element can be expressed as a numeric or not, use the `as.numeric()` function. If it can be expressed as a numeric, the number will be returned. If it cannot be, then it will return `NA`. 
+
